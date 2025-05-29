@@ -5,13 +5,19 @@ import configparser
 from models import create_tables, User, Favorite, Photo, Profile
 
 
-def load_conf(file_path='config.ini'):
-    config = configparser.ConfigParser()
-    config.read(file_path)
-    return config['DNS']['link']
+class ConfigLoader:
+    def __init__(self, file_path='config.ini'):
+        self.config = configparser.ConfigParser()
+        self.config.read(file_path)
+
+    def get(self, section, key):
+        return self.config[section][key]
 
 
-DSN = load_conf('config.ini')
+conf = ConfigLoader()
+
+DSN = conf.get('DNS', 'link')
+vk_token = conf.get('VK_TOKEN', 'token')
 
 engine = sqlalchemy.create_engine(DSN)
 
